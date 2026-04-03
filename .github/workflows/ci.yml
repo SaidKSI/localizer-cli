@@ -44,4 +44,4 @@ jobs:
         run: pnpm lint
 
       - name: Verify CLI binary
-        run: node dist/bin/localize.js --help
+        run: node dist/bin/localizer.js --help

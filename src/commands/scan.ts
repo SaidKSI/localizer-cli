@@ -71,10 +71,10 @@ function printScanResults(results: ScanResult[], cwd: string): void {
 
 function printNextSteps(options: ScanOptions): void {
   if (options.file) {
-    logger.raw(chalk.dim(`  Run \`localize translate --file ${options.file}\` to generate translations.`));
-    logger.raw(chalk.dim(`  Run \`localize run --file ${options.file}\` for the full pipeline.`));
+    logger.raw(chalk.dim(`  Run \`localizer translate --file ${options.file}\` to generate translations.`));
+    logger.raw(chalk.dim(`  Run \`localizer run --file ${options.file}\` for the full pipeline.`));
   } else if (options.dir) {
-    logger.raw(chalk.dim(`  Run \`localize run --dir ${options.dir}\` for the full pipeline.`));
+    logger.raw(chalk.dim(`  Run \`localizer run --dir ${options.dir}\` for the full pipeline.`));
   }
   logger.blank();
 }
@@ -136,7 +136,7 @@ async function runScan(options: ScanOptions): Promise<void> {
   printScanResults(report.results, cwd);
   printNextSteps(options);
 
-  // --output: save JSON to file (.localize/scan/)
+  // --output: save JSON to file (.localizer/scan/)
   if (options.output === true || typeof options.output === "string") {
     const sourceFile = options.file || options.dir || "";
     const outputFilename = typeof options.output === "string" ? options.output : "";
@@ -150,7 +150,7 @@ export const scanCommand = new Command("scan")
   .option("--file <file>",     "Scope to a single file")
   .option("--dir <dir>",       "Scope to a directory")
   .option("--report",          "Print JSON report to stdout (pipe-friendly)")
-  .option("--output [path]",   "Save JSON report to .localize/scan/ (auto-generates filename if not provided)")
+  .option("--output [path]",   "Save JSON report to .localizer/scan/ (auto-generates filename if not provided)")
   .action(async (options: ScanOptions) => {
     try {
       await runScan(options);

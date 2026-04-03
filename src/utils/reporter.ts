@@ -42,7 +42,7 @@ function generateScanFileName(filePath: string): string {
 /**
  * Write a ScanReport to disk with metadata.
  * Auto-generates filename if outputPath is a directory.
- * Auto-creates .localize/scan/ if needed.
+ * Auto-creates .localizer/scan/ if needed.
  * Prompts for confirmation if file exists.
  *
  * Transforms results to be grouped by file with relative paths,
@@ -54,13 +54,13 @@ export async function writeScanReport(
   sourceFilePath?: string,
   cwd = process.cwd(),
 ): Promise<string> {
-  const scanDir = resolve(cwd, ".localize", "scan");
+  const scanDir = resolve(cwd, ".localizer", "scan");
   await mkdir(scanDir, { recursive: true });
 
   // If outputPath is just a flag with no value, auto-generate filename
   let finalPath = resolve(scanDir, sourceFilePath ? generateScanFileName(sourceFilePath) : "scan-report.json");
 
-  // If outputPath is explicitly provided, use it (resolve relative to .localize/scan/)
+  // If outputPath is explicitly provided, use it (resolve relative to .localizer/scan/)
   if (outputPath && outputPath !== "true") {
     finalPath = resolve(scanDir, outputPath);
   }

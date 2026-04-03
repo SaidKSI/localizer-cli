@@ -58,7 +58,7 @@ async function runAddLang(options: AddLangOptions): Promise<void> {
   // Guard: already configured (e.g. add-lang was partially interrupted)
   if (config.languages.includes(newLang)) {
     logger.warn(`Language "${newLang}" is already in your config.`);
-    logger.dim(`  To fill missing keys: localize translate --from-existing --missing-only --lang ${newLang}`);
+    logger.dim(`  To fill missing keys: localizer translate --from-existing --missing-only --lang ${newLang}`);
     return;
   }
 
@@ -78,7 +78,7 @@ async function runAddLang(options: AddLangOptions): Promise<void> {
   readSpinner.succeed(`Found ${entries.length} key${entries.length !== 1 ? "s" : ""} in "${sourceLang}".`);
 
   if (entries.length === 0) {
-    logger.warn(`No keys found in messages/${sourceLang}/. Run \`localize translate\` first.`);
+    logger.warn(`No keys found in messages/${sourceLang}/. Run \`localizer translate\` first.`);
     return;
   }
 
@@ -110,9 +110,9 @@ async function runAddLang(options: AddLangOptions): Promise<void> {
   await writeProjectConfig(updatedConfig, cwd);
 
   logger.blank();
-  logger.success(`Added "${newLang}" to .localize.config.json`);
+  logger.success(`Added "${newLang}" to .localizer.config.json`);
   logger.dim(`  Files written: ${result.messagesWritten.length}`);
-  logger.dim(`  Run \`localize validate --lang ${newLang}\` to check coverage.`);
+  logger.dim(`  Run \`localizer validate --lang ${newLang}\` to check coverage.`);
   logger.blank();
 }
 

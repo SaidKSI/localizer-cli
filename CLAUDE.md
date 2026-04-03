@@ -6,20 +6,20 @@ Command-line tool for automating i18n workflows in JavaScript/TypeScript project
 
 ## Project Overview
 
-**@localize/cli** is a standalone CLI app that:
-- Scans codebases for hardcoded strings (via `@localize/core`)
+**@saidksi/localizer-cli** is a standalone CLI app that:
+- Scans codebases for hardcoded strings (via `@saidksi/localizer-core`)
 - Generates semantic i18n keys using AI
 - Translates strings into multiple languages
 - Rewrites source code to use i18n function calls
 - Validates translation coverage across languages
 - Provides full automation pipeline and individual commands
 
-**Depends on:** `@saidksi/localizer-core@0.1.0` (npm package)
+**Depends on:** `@saidksi/localizer-core@0.1.1` (npm package)
 
-**Status:** V0.1.0 — All 10 commands complete. Ready to publish (after core is available).
+**Status:** V0.1.1 — All 10 commands complete. Ready to publish (core v0.1.1 available).
 
-**Package:** `@saidksi/localizer-cli@0.1.0` (npm)
-**Repository:** https://github.com/SaidKSI/localize-cli
+**Package:** `@saidksi/localizer-cli@0.1.1` (npm)
+**Repository:** https://github.com/SaidKSI/localizer-cli
 **GitHub Actions:** ✅ CI + Auto-publish on tags (v*)
 
 ---
@@ -45,7 +45,7 @@ pnpm clean            # Remove dist/
 src/
 ├── index.ts                    # Main entry point (exports main())
 ├── bin/
-│   └── localize.ts            # Executable entry point (shebang: #!/usr/bin/env node)
+│   └── localizer.ts            # Executable entry point (shebang: #!/usr/bin/env node)
 ├── commands/                   # One file per CLI command
 │   ├── init.ts                # Interactive setup wizard
 │   ├── audit.ts               # Count all hardcoded strings
@@ -58,7 +58,7 @@ src/
 │   ├── status.ts              # Project health snapshot
 │   └── diff.ts                # Show missing keys per language
 └── utils/                      # Shared utilities
-    ├── config.ts              # Load/validate .localize.config.json
+    ├── config.ts              # Load/validate .localizer/config.json
     ├── logger.ts              # Console formatting (colors, spinner)
     ├── prompt.ts              # User confirmation dialogs
     ├── reporter.ts            # Report formatting
@@ -81,7 +81,7 @@ export async function main(): Promise<void>;
 CLI is invoked via the executable:
 
 ```bash
-localize [command] [options]
+localizer [command] [options]
 ```
 
 ---
@@ -136,7 +136,7 @@ localize [command] [options]
 ### Testing
 - **Vitest** (not Jest) — native ESM support
 - **No real API calls** — mock Anthropic/OpenAI at SDK boundary
-- **Integration tests** — use real `.localize.config.json` and message files
+- **Integration tests** — use real `.localizer/config.json` and message files
 
 ---
 
@@ -144,7 +144,7 @@ localize [command] [options]
 
 ### config.ts
 
-Load and validate `.localize.config.json` from user's project.
+Load and validate `.localizer/config.json` from user's project.
 
 **Features:**
 - Uses `cosmiconfig` to search up directory tree
@@ -219,7 +219,7 @@ export const initCommand = new Command("init")
 
 ## Configuration File
 
-`.localize.config.json` created by `localize init`:
+`.localizer/config.json` created by `localizer init`:
 
 ```json
 {
@@ -242,7 +242,7 @@ export const initCommand = new Command("init")
 
 ## API Key Storage
 
-API keys stored in global `~/.localize` (not per-project .env):
+API keys stored in global `~/.localizer` (not per-project .env):
 
 ```json
 {
@@ -261,7 +261,7 @@ API keys stored in global `~/.localize` (not per-project .env):
 
 ## Core Dependencies
 
-- `@localize/core` — Scanner, Rewriter, AIClient, Validator
+- `@saidksi/localizer-core` — Scanner, Rewriter, AIClient, Validator
 - `commander` — CLI framework
 - `cosmiconfig` — Config file discovery
 - `chalk` — Colored console output
@@ -338,38 +338,37 @@ pnpm test:coverage
 # Type check
 pnpm lint
 
-# Build (outputs to dist/, makes bin/localize.js executable)
+# Build (outputs to dist/, makes bin/localizer.js executable)
 pnpm build
 
 # Test locally
-node dist/bin/localize.js --help
+node dist/bin/localizer.js --help
 ```
 
 ---
 
 ## Publishing to npm
 
-**Current Status:** Ready to publish (waiting for `@saidksi/localizer-core@0.1.0` on npm)
+**Current Status:** Ready to publish (core v0.1.1 available on npm)
 
 **How Publishing Works:**
-1. Ensure `@saidksi/localizer-core@0.1.0` is available on npm
-2. Generate `pnpm-lock.yaml`: `pnpm install`
-3. Commit lock file: `git add pnpm-lock.yaml && git commit`
-4. Tag release: `git tag v0.1.0`
-5. Push tag: `git push origin v0.1.0`
-6. GitHub Actions automatically:
+1. Ensure `@saidksi/localizer-core@0.1.1` is available on npm
+2. Lock file is committed to the repo: `pnpm-lock.yaml`
+3. Tag release: `git tag v0.1.1`
+4. Push tag: `git push origin v0.1.1`
+5. GitHub Actions automatically:
    - Builds with `pnpm build`
-   - Verifies CLI binary: `node dist/bin/localize.js --help`
+   - Verifies CLI binary: `node dist/bin/localizer.js --help`
    - Publishes to npm using `NPM_TOKEN` secret
-   - Watch at: https://github.com/SaidKSI/localize-cli/actions
+   - Watch at: https://github.com/SaidKSI/localizer-cli/actions
 
 **Package Details:**
 - **Name:** `@saidksi/localizer-cli`
-- **Version:** `0.1.0`
+- **Version:** `0.1.1`
 - **npm:** https://www.npmjs.com/package/@saidksi/localizer-cli
 - **Type:** ESM module
-- **Bin:** `localizer` → `dist/bin/localize.js`
-- **Files:** `dist/` only
+- **Bin:** `localizer` → `dist/bin/localizer.js`
+- **Files:** `dist/` and `bin/` (gitignored in dist/)
 
 **GitHub Secrets Required:**
 - `NPM_TOKEN` — npm automation token (already configured)
@@ -383,7 +382,7 @@ node dist/bin/localize.js --help
 - **Console UI:** Chalk + Ora (colors + spinners)
 - **Prompts:** prompts library (Node.js friendly, not inquirer)
 - **File-by-file Confirmation:** Yes — show diff per file when processing directories
-- **API Key Storage:** Global `~/.localize` (not per-project .env)
+- **API Key Storage:** Global `~/.localizer` (not per-project .env)
 - **Bypass Confirmation:** `--yes` flag (not `--force`, which triggers cache bypass)
 
 ---
@@ -391,27 +390,27 @@ node dist/bin/localize.js --help
 ## Related Repos
 
 - **localizer-core** — Core library (Scanner, Rewriter, AIClient, Validator)
-  - Repo: https://github.com/SaidKSI/localize-core
-  - npm: `@saidksi/localizer-core@0.1.0`
-  - Status: Ready to publish
+  - Repo: https://github.com/SaidKSI/localizer-core
+  - npm: `@saidksi/localizer-core@0.1.1`
+  - Status: Published
 
-- **localize-sample-app** — Testing app for CLI
-  - Repo: https://github.com/SaidKSI/localize-sample-app
+- **localizer-sample-app** — Testing app for CLI
+  - Repo: https://github.com/SaidKSI/localizer-sample-app
   - Framework: React 18 + Vite + TypeScript
   - 40+ hardcoded strings for testing CLI
   - Languages: en, fr, es (ready for CLI testing)
 
-- **localize-dashboard** (Phase 2, private)
+- **localizer-dashboard** (Phase 2, private)
   - Will have web UI for translation management
-  - Will depend on `localize-core`
+  - Will depend on `localizer-core`
 
 ---
 
 ## Key Contacts & Resources
 
-- **GitHub Issues:** https://github.com/SaidKSI/localize-cli/issues
+- **GitHub Issues:** https://github.com/SaidKSI/localizer-cli/issues
 - **npm Package:** https://www.npmjs.com/package/@saidksi/localizer-cli
-- **GitHub Actions:** https://github.com/SaidKSI/localize-cli/actions
+- **GitHub Actions:** https://github.com/SaidKSI/localizer-cli/actions
 - **Author:** SaidKSI
 - **License:** MIT
 
@@ -419,13 +418,13 @@ node dist/bin/localize.js --help
 
 ## Quick Reference
 
-### Use localize-cli when:
+### Use localizer-cli when:
 - Building the CLI app
 - Adding new commands
 - Working on prompts/UX
 - Testing end-to-end workflows
 
-### Use localize-core when:
+### Use localizer-core when:
 - Fixing scanner bugs
 - Tuning AI prompts
 - Improving code transformation

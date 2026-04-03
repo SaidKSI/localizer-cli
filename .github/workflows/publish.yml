@@ -44,7 +44,7 @@ jobs:
         run: pnpm build
 
       - name: Verify CLI binary
-        run: node dist/bin/localize.js --help
+        run: node dist/bin/localizer.js --help
 
       - name: Publish to npm
         run: npm publish

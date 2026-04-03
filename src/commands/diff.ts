@@ -70,7 +70,7 @@ async function runDiff(options: DiffOptions): Promise<void> {
 
   logger.blank();
   logger.dim(
-    `  Run \`localize translate --missing-only --lang ${lang}\` to fill these keys.`,
+    `  Run \`localizer translate --missing-only --lang ${lang}\` to fill these keys.`,
   );
   logger.blank();
 

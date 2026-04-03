@@ -20,7 +20,7 @@ export async function main(): Promise<void> {
   const program = new Command();
 
   program
-    .name("localize")
+    .name("localizer")
     .description("Automate the full i18n workflow for JavaScript and TypeScript codebases")
     .version(version, "-v, --version", "Print the current version")
     .helpOption("-h, --help", "Show help")

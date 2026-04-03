@@ -128,7 +128,7 @@ async function runRewrite(options: RewriteOptions): Promise<void> {
 
   if (resolvable.length === 0) {
     logger.blank();
-    logger.info("Nothing to rewrite. Run `localize translate` first to generate keys.");
+    logger.info("Nothing to rewrite. Run `localizer translate` first to generate keys.");
     return;
   }
 

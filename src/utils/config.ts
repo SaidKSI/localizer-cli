@@ -1,38 +1,38 @@
 import { readFile, writeFile, mkdir } from "fs/promises";
 import { join, resolve } from "path";
-import type { LocalizeConfig, AIProvider } from "@saidksi/localizer-core";
+import type { LocalizerConfig, AIProvider } from "@saidksi/localizer-core";
 
 // ─── Paths ─────────────────────────────────────────────────────────────────────
 
-const LOCALIZE_DIR    = ".localize";
+const LOCALIZE_DIR    = ".localizer";
 const CONFIG_FILENAME = "config.json";
 const KEYS_FILENAME   = ".keys";
 const GITIGNORE_ENTRY = ".keys\ncache.json\n";
 
-// ─── Project config (.localize/config.json) ───────────────────────────────────
+// ─── Project config (.localizer/config.json) ───────────────────────────────────
 
 /**
- * Load the project config from `{cwd}/.localize/config.json`.
+ * Load the project config from `{cwd}/.localizer/config.json`.
  * Throws a user-friendly error if no config is found.
  */
-export async function loadConfig(cwd = process.cwd()): Promise<LocalizeConfig> {
+export async function loadConfig(cwd = process.cwd()): Promise<LocalizerConfig> {
   const configPath = resolve(cwd, LOCALIZE_DIR, CONFIG_FILENAME);
   try {
     const content = await readFile(configPath, "utf-8");
-    return JSON.parse(content) as LocalizeConfig;
+    return JSON.parse(content) as LocalizerConfig;
   } catch {
     throw new Error(
-      "No config found. Run `localize init` to create .localize/config.json",
+      "No config found. Run `localizer init` to create .localizer/config.json",
     );
   }
 }
 
 /**
- * Write a full project config to `{cwd}/.localize/config.json`.
- * Creates the `.localize/` directory if needed and writes a `.gitignore` inside it.
+ * Write a full project config to `{cwd}/.localizer/config.json`.
+ * Creates the `.localizer/` directory if needed and writes a `.gitignore` inside it.
  */
 export async function writeProjectConfig(
-  config: LocalizeConfig,
+  config: LocalizerConfig,
   cwd = process.cwd(),
 ): Promise<void> {
   const localizeDir = resolve(cwd, LOCALIZE_DIR);
@@ -41,7 +41,7 @@ export async function writeProjectConfig(
   const configPath = join(localizeDir, CONFIG_FILENAME);
   await writeFile(configPath, JSON.stringify(config, null, 2) + "\n", "utf-8");
 
-  // Ensure .gitignore inside .localize/ to protect .keys and cache
+  // Ensure .gitignore inside .localizer/ to protect .keys and cache
   const gitignorePath = join(localizeDir, ".gitignore");
   try {
     await readFile(gitignorePath, "utf-8");
@@ -51,7 +51,7 @@ export async function writeProjectConfig(
   }
 }
 
-// ─── API key (.localize/.keys) ────────────────────────────────────────────────
+// ─── API key (.localizer/.keys) ────────────────────────────────────────────────
 
 interface KeysFile {
   anthropic?: string;
@@ -72,7 +72,7 @@ async function loadKeysFile(cwd: string): Promise<KeysFile> {
 }
 
 /**
- * Save an API key to `{cwd}/.localize/.keys`.
+ * Save an API key to `{cwd}/.localizer/.keys`.
  * Merges into existing entries (does not overwrite other provider keys).
  */
 export async function saveApiKey(
@@ -92,7 +92,7 @@ export async function saveApiKey(
  * Retrieve the API key for the configured provider.
  * Checks in order:
  *   1. Environment variable (ANTHROPIC_API_KEY / OPENAI_API_KEY)
- *   2. {cwd}/.localize/.keys
+ *   2. {cwd}/.localizer/.keys
  *
  * Returns null if no key is found.
  */
@@ -124,7 +124,7 @@ export async function requireApiKey(
       provider === "anthropic" ? "ANTHROPIC_API_KEY" : "OPENAI_API_KEY";
     throw new Error(
       `No API key found for ${provider}.\n` +
-        `  Set ${envVar} in your environment, or run \`localize init\` to save one.`,
+        `  Set ${envVar} in your environment, or run \`localizer init\` to save one.`,
     );
   }
   return key;

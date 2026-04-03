@@ -37,7 +37,7 @@ async function runStatus(options: StatusOptions): Promise<void> {
     logger.fatal(err instanceof Error ? err.message : String(err)),
   );
 
-  logger.header("Localize project status");
+  logger.header("Localizer project status");
 
   // ── Coverage
   const coverageSpinner = ora("Computing key coverage…").start();
@@ -62,7 +62,7 @@ async function runStatus(options: StatusOptions): Promise<void> {
   if (incomplete.length > 0) {
     logger.blank();
     logger.dim(
-      `  Run \`localize translate --missing-only\` to fill ${incomplete.reduce((n, r) => n + r.missingKeys.length, 0)} missing key${incomplete.reduce((n, r) => n + r.missingKeys.length, 0) !== 1 ? "s" : ""}.`,
+      `  Run \`localizer translate --missing-only\` to fill ${incomplete.reduce((n, r) => n + r.missingKeys.length, 0)} missing key${incomplete.reduce((n, r) => n + r.missingKeys.length, 0) !== 1 ? "s" : ""}.`,
     );
   }
 
@@ -94,7 +94,7 @@ async function runStatus(options: StatusOptions): Promise<void> {
       `  ${chalk.yellow(untranslatedCount)} untranslated string${untranslatedCount !== 1 ? "s" : ""} in ` +
       `${chalk.yellow(untranslatedFiles)} file${untranslatedFiles !== 1 ? "s" : ""}.`,
     );
-    logger.dim(`  Run \`localize translate\` to generate keys and translations.`);
+    logger.dim(`  Run \`localizer translate\` to generate keys and translations.`);
   } else {
     logger.raw(`  ${chalk.green("✔")} All strings in source files are translated.`);
   }
@@ -107,7 +107,7 @@ async function runStatus(options: StatusOptions): Promise<void> {
   const cachedEntries = Object.entries(cache.entries);
 
   if (cachedEntries.length === 0) {
-    logger.dim("  No cache entries. Run `localize run` to populate.");
+    logger.dim("  No cache entries. Run `localizer run` to populate.");
   } else {
     const newest = cachedEntries.reduce<string | null>((latest, [, entry]) => {
       if (!latest) return entry.processedAt;
@@ -120,7 +120,7 @@ async function runStatus(options: StatusOptions): Promise<void> {
     if (newest) {
       logger.dim(`  Last run: ${formatAge(newest)}`);
     }
-    logger.dim(`  Cache path: ${relative(cwd, join(resolve(cwd), ".localize", "cache.json"))}`);
+    logger.dim(`  Cache path: ${relative(cwd, join(resolve(cwd), ".localizer", "cache.json"))}`);
   }
 
   // ── Config snapshot
@@ -137,7 +137,7 @@ async function runStatus(options: StatusOptions): Promise<void> {
 
   // Check config file age
   try {
-    const configStat = await stat(join(cwd, ".localize", "config.json"));
+    const configStat = await stat(join(cwd, ".localizer", "config.json"));
     logger.dim(`  Config last modified: ${formatAge(configStat.mtime.toISOString())}`);
   } catch { /* config found elsewhere via cosmiconfig */ }
 

@@ -101,8 +101,8 @@ function printAuditTable(groups: GroupEntry[], total: ScanResult[], cwd: string)
     `  ${chalk.bold("Total:")} ${chalk.yellow(total.length)} strings in ${chalk.yellow(totalFiles)} files`,
   );
   logger.blank();
-  logger.raw(chalk.dim("  Run `localize run --dir <path>` to process any directory."));
-  logger.raw(chalk.dim("  Run `localize audit --output audit.json` to export as a work list."));
+  logger.raw(chalk.dim("  Run `localizer run --dir <path>` to process any directory."));
+  logger.raw(chalk.dim("  Run `localizer audit --output audit.json` to export as a work list."));
   logger.blank();
 }
 

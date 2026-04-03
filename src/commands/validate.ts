@@ -47,7 +47,7 @@ function printMissingKeys(results: ValidationResult[]): void {
   }
 }
 
-function printNextSteps(results: ValidationResult[], config: import("@saidksi/localizer-core").LocalizeConfig, lang?: string): void {
+function printNextSteps(results: ValidationResult[], config: import("@saidksi/localizer-core").LocalizerConfig, lang?: string): void {
   const incomplete = results.filter(
     (r) => r.missingKeys.length > 0 && r.language !== config.defaultLanguage,
   );
@@ -56,7 +56,7 @@ function printNextSteps(results: ValidationResult[], config: import("@saidksi/lo
   const langFlag = lang ? ` --lang ${lang}` : "";
   logger.raw(
     chalk.dim(
-      `  Run \`localize translate --missing-only${langFlag}\` to fill missing keys.`,
+      `  Run \`localizer translate --missing-only${langFlag}\` to fill missing keys.`,
     ),
   );
   logger.blank();

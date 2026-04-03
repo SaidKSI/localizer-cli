@@ -19,7 +19,7 @@ import { flattenJson } from "../utils/json.js";
 /**
  * Write translate results to a JSON file for debugging.
  * Includes scan results with resolved keys, dedup info, and AI calls made.
- * Outputs to .localize/translate/{pageName}_translate.json
+ * Outputs to .localizer/translate/{pageName}_translate.json
  */
 async function writeDebugOutput(
   cwd: string,
@@ -28,8 +28,8 @@ async function writeDebugOutput(
   scanResults: ScanResult[],
   uniqueStrings: number,
 ): Promise<string[]> {
-  // Create .localize/translate directory
-  const translateDir = resolve(cwd, ".localize", "translate");
+  // Create .localizer/translate directory
+  const translateDir = resolve(cwd, ".localizer", "translate");
   await mkdir(translateDir, { recursive: true });
 
   // Group scan results by file and page name
@@ -213,7 +213,7 @@ async function runTranslate(options: TranslateOptions): Promise<void> {
     spinner.succeed(`Found ${entries.length} existing key${entries.length !== 1 ? "s" : ""}.`);
 
     if (entries.length === 0) {
-      logger.warn("No existing keys found. Run `localize translate --file <file>` first.");
+      logger.warn("No existing keys found. Run `localizer translate --file <file>` first.");
       return;
     }
 
@@ -280,7 +280,7 @@ async function runTranslate(options: TranslateOptions): Promise<void> {
 
   aiSpinner.succeed("Translation complete.");
 
-  // Write debug output to .localize/translate/ only if --output is specified
+  // Write debug output to .localizer/translate/ only if --output is specified
   if (options.output) {
     const debugSpinner = ora("Writing debug output...").start();
     try {
@@ -291,7 +291,7 @@ async function runTranslate(options: TranslateOptions): Promise<void> {
         translateResult.results,
         translateResult.uniqueStrings,
       );
-      debugSpinner.succeed(`Debug output written to .localize/translate/`);
+      debugSpinner.succeed(`Debug output written to .localizer/translate/`);
       for (const path of debugPaths) {
         logger.dim(`  ${path}`);
       }
@@ -318,7 +318,7 @@ export const translateCommand = new Command("translate")
   .option("--from-existing",  "Translate all keys in the default language JSON (no scan)")
   .option("--missing-only",   "Only translate keys missing from target language JSONs")
   .option("--dry-run",        "Preview AI output without writing files")
-  .option("--output",         "Write debug output to .localize/translate/")
+  .option("--output",         "Write debug output to .localizer/translate/")
   .action(async (options: TranslateOptions) => {
     try {
       await runTranslate(options);

@@ -4,7 +4,7 @@ import { join, resolve } from "path";
 import ora from "ora";
 import chalk from "chalk";
 import { scanDirectory, validateApiKey } from "@saidksi/localizer-core";
-import type { LocalizeConfig, AIProvider, KeyStyle, I18nLibrary } from "@saidksi/localizer-core";
+import type { LocalizerConfig, AIProvider, KeyStyle, I18nLibrary } from "@saidksi/localizer-core";
 import { logger } from "../utils/logger.js";
 import { loadConfig, saveApiKey, writeProjectConfig } from "../utils/config.js";
 import {
@@ -60,7 +60,7 @@ const OPENAI_MODELS = [
   { name: "GPT-3.5 Turbo",        value: "gpt-3.5-turbo" },
 ];
 
-const PRESETS: Record<string, Partial<LocalizeConfig>> = {
+const PRESETS: Record<string, Partial<LocalizerConfig>> = {
   nextjs: {
     include:      ["./app", "./src"],
     exclude:      ["node_modules", "dist", ".next", "**/*.test.*", "**/*.stories.*"],
@@ -157,7 +157,7 @@ interface InitOptions {
 
 async function runWizard(cwd: string, options: InitOptions): Promise<void> {
   logger.blank();
-  logger.raw(chalk.bold("  localize init"));
+  logger.raw(chalk.bold("  localizer init"));
   logger.blank();
 
   // ── Step 1: Detect framework and i18n library
@@ -172,12 +172,12 @@ async function runWizard(cwd: string, options: InitOptions): Promise<void> {
   }
 
   // ── Step 2: Check existing config
-  const configPath = resolve(cwd, ".localize", "config.json");
+  const configPath = resolve(cwd, ".localizer", "config.json");
   const configExists = await fileExists(configPath);
 
   if (configExists && !options.reset) {
     const choice = await promptSelect<"overwrite" | "abort">(
-      "A .localize/config.json already exists. What would you like to do?",
+      "A .localizer/config.json already exists. What would you like to do?",
       [
         { name: "Overwrite it",  value: "overwrite" },
         { name: "Abort",         value: "abort"     },
@@ -241,7 +241,7 @@ async function runWizard(cwd: string, options: InitOptions): Promise<void> {
     );
 
     if (targetLanguages.length === 0) {
-      logger.warn("No target languages selected. You can add them later with `localize add-lang`.");
+      logger.warn("No target languages selected. You can add them later with `localizer add-lang`.");
     }
   }
 
@@ -336,10 +336,10 @@ async function runWizard(cwd: string, options: InitOptions): Promise<void> {
     if (valid) {
       spinner.succeed("API key is valid.");
       if (!envKey) {
-        const save = await promptConfirm("Save key to .localize/.keys for future use?", true);
+        const save = await promptConfirm("Save key to .localizer/.keys for future use?", true);
         if (save) {
           await saveApiKey(aiProvider, apiKey);
-          logger.success("Key saved to .localize/.keys");
+          logger.success("Key saved to .localizer/.keys");
         }
       }
     } else {
@@ -350,7 +350,7 @@ async function runWizard(cwd: string, options: InitOptions): Promise<void> {
   }
 
   // ── Step 13: Build config + confirm
-  const config: LocalizeConfig = {
+  const config: LocalizerConfig = {
     defaultLanguage,
     languages:        targetLanguages,
     messagesDir:      defaultMessagesDir,
@@ -377,11 +377,11 @@ async function runWizard(cwd: string, options: InitOptions): Promise<void> {
   }
 
   await writeProjectConfig(config, cwd);
-  logger.success(`Wrote .localize/config.json`);
+  logger.success(`Wrote .localizer/config.json`);
 
-  // ── Step 14: Gitignore — ensure .localize/ itself is NOT gitignored
-  // (config.json is committed; only .keys and cache.json are gitignored via .localize/.gitignore)
-  logger.dim("Created .localize/.gitignore (ignores .keys and cache.json)");
+  // ── Step 14: Gitignore — ensure .localizer/ itself is NOT gitignored
+  // (config.json is committed; only .keys and cache.json are gitignored via .localizer/.gitignore)
+  logger.dim("Created .localizer/.gitignore (ignores .keys and cache.json)");
 
   // ── Step 14: Fast pre-scan estimate
   await runPreScanEstimate(cwd, config);
@@ -394,7 +394,7 @@ async function runWizard(cwd: string, options: InitOptions): Promise<void> {
 
 async function runPresetFlow(
   cwd: string,
-  preset: Partial<LocalizeConfig>,
+  preset: Partial<LocalizerConfig>,
   framework: string | null,
   detectedI18nLibrary?: I18nLibrary | null,
 ): Promise<void> {
@@ -426,13 +426,13 @@ async function runPresetFlow(
         valid ? spinner.succeed("Valid.") : spinner.fail("Invalid key.");
         if (valid) {
           await saveApiKey(aiProvider, apiKey);
-          logger.success("Key saved to .localize/.keys");
+          logger.success("Key saved to .localizer/.keys");
         }
       }
     }
   }
 
-  const config: LocalizeConfig = {
+  const config: LocalizerConfig = {
     defaultLanguage,
     languages:         targetLanguages,
     messagesDir:       preset.messagesDir  ?? "./messages",
@@ -451,7 +451,7 @@ async function runPresetFlow(
   if (!write) { logger.warn("Aborted."); return; }
 
   await writeProjectConfig(config, cwd);
-  logger.success("Wrote .localize/config.json");
+  logger.success("Wrote .localizer/config.json");
   await runPreScanEstimate(cwd, config);
   printWhatsNext(config);
 }
@@ -460,7 +460,7 @@ async function runPresetFlow(
 
 async function runPreScanEstimate(
   cwd: string,
-  config: LocalizeConfig,
+  config: LocalizerConfig,
 ): Promise<void> {
   logger.blank();
   const spinner = ora("Running fast pre-scan to estimate work...").start();
@@ -483,19 +483,19 @@ async function runPreScanEstimate(
 
 // ─── What's next panel ────────────────────────────────────────────────────────
 
-function printWhatsNext(config: LocalizeConfig): void {
+function printWhatsNext(config: LocalizerConfig): void {
   logger.blank();
   logger.raw(chalk.bold("  What's next:"));
   logger.blank();
   logger.raw(`  ${chalk.dim("# See all untranslated strings across your app")}`);
-  logger.raw(`  ${chalk.cyan("localize audit")}`);
+  logger.raw(`  ${chalk.cyan("localizer audit")}`);
   logger.blank();
-  logger.raw(`  ${chalk.dim("# Localize a single file (scan → translate → rewrite → validate)")}`);
-  logger.raw(`  ${chalk.cyan("localize run --file ./src/pages/Login.tsx")}`);
+  logger.raw(`  ${chalk.dim("# Localizer a single file (scan → translate → rewrite → validate)")}`);
+  logger.raw(`  ${chalk.cyan("localizer run --file ./src/pages/Login.tsx")}`);
   logger.blank();
   if (config.languages.length > 0) {
     logger.raw(`  ${chalk.dim("# Check key coverage across all languages")}`);
-    logger.raw(`  ${chalk.cyan("localize validate")}`);
+    logger.raw(`  ${chalk.cyan("localizer validate")}`);
     logger.blank();
   }
 }
@@ -503,7 +503,7 @@ function printWhatsNext(config: LocalizeConfig): void {
 // ─── Command export ───────────────────────────────────────────────────────────
 
 export const initCommand = new Command("init")
-  .description("Interactive setup wizard — creates .localize.config.json")
+  .description("Interactive setup wizard — creates .localizer.config.json")
   .option("--reset",          "Wipe existing config and start fresh")
   .option("--preset <name>",  "Skip wizard, apply preset defaults (nextjs | expo)")
   .action(async (options: InitOptions) => {

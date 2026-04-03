@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@saidksi/localizer-core':
-        specifier: ^0.1.1
-        version: 0.1.1
+        specifier: ^0.1.2
+        version: 0.1.2
       chalk:
         specifier: ^5.3.0
         version: 5.6.2
@@ -405,8 +405,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@saidksi/localizer-core@0.1.1':
-    resolution: {integrity: sha512-gClmVmX0935FQZLhbNVMwkdBGxpltLFieip/nNA0hpvz82KytgtG559gAET71l760ByFSZ3CQHBgk4rnXw8Kkw==}
+  '@saidksi/localizer-core@0.1.2':
+    resolution: {integrity: sha512-gWru9lCWkHStDXwjRIuDKG9RXmirjUDgMIjIW3NoTi9xNoc4vIgio6olwfIZgS2M8anazJxOm2j60maM3JgNoA==}
     engines: {node: '>=20.0.0', pnpm: '>=8.0.0'}
 
   '@ts-morph/common@0.24.0':
@@ -1438,7 +1438,7 @@ snapshots:
   '@rollup/rollup-win32-x64-msvc@4.60.1':
     optional: true
 
-  '@saidksi/localizer-core@0.1.1':
+  '@saidksi/localizer-core@0.1.2':
     dependencies:
       '@anthropic-ai/sdk': 0.32.1
       '@babel/parser': 7.29.2

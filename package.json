@@ -37,6 +37,9 @@
     "url": "https://github.com/SaidKSI/localize-cli/issues"
   },
   "homepage": "https://github.com/SaidKSI/localize-cli#readme",
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "@saidksi/localizer-core": "^0.1.0",
     "commander": "^11.1.0",

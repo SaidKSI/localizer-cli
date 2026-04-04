@@ -1,6 +1,6 @@
 {
   "name": "@saidksi/localizer-cli",
-  "version": "0.2.0",
+  "version": "0.2.5",
   "description": "CLI tool for automating i18n workflows in JavaScript/TypeScript projects with localizer",
   "type": "module",
   "bin": {
